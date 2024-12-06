@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BallBaseActor.h"
-#include "BlackBallActor.generated.h"
+#include "BlackBallActor.generated.h" 
 
 /**
  * 
