@@ -96,6 +96,10 @@ void ACueActor::Tick(float DeltaTime)
 
 void ACueActor::SetCueActive(bool bActive)
 {
+	if (CueMesh) {
+		CueMesh->SetVisibility(bActive);
+		CueState = bActive ? ECueState::Idle : ECueState::Disabled;
+	}
 }
 
 void ACueActor::RotateCue(float Value)
@@ -148,6 +152,20 @@ void ACueActor::StartCuePull()
 
 void ACueActor::Shoot()
 {
+	if (WhiteBallReference) {
+		FVector ShootDirection = WhiteBallReference->GetActorLocation() - GetActorLocation();
+		ShootDirection.Normalize();
+
+		//calculate force based on hold time
+		float ForceStrength = CalculateForceStrength();
+
+		//print on the screen the force strength
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("ForceStrength: %f"), ForceStrength));
+
+		WhiteBallReference->GetBallMesh()->AddImpulse(ShootDirection * ForceStrength);
+		SetCueActive(false);
+
+	}
 }
 
 float ACueActor::CalculateForceStrength()

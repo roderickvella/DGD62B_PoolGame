@@ -29,7 +29,8 @@ ABallBaseActor::ABallBaseActor()
 void ABallBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//store the ball position
+	BallPosition = GetActorLocation();
 }
 
 // Called every frame
@@ -41,15 +42,21 @@ void ABallBaseActor::Tick(float DeltaTime)
 
 UStaticMeshComponent* ABallBaseActor::GetBallMesh() const
 {
-	return nullptr;
+	return BallMesh;
 }
 
 bool ABallBaseActor::IsBallMoving() const
 {
+	if (BallMesh) {
+		return !BallMesh->GetPhysicsLinearVelocity().IsNearlyZero();
+	}
 	return false;
 }
 
 void ABallBaseActor::ResetBallPosition()
 {
+	SetActorLocation(BallPosition);
+	BallMesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
+	BallMesh->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 }
 
